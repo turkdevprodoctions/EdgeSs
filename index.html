@@ -130,7 +130,7 @@ body { background: var(--bg); color: var(--text); height: 100vh; display: flex; 
 <div id="loader-container">
   <div class="loader-icon">🧠</div>
   <h2>Saksuka Service Yapay Zeka Modeli</h2>
-  <p>Saksuka Service tarafından geliştirilen yerel yapay zeka modeli (~105 MB). Bir kez indirildikten sonra cihazınızda kalır.</p>
+  <p>Saksuka Service tarafından geliştirilen yerel yapay zeka modeli (~230 MB). Bir kez indirildikten sonra cihazınızda kalır.</p>
   <div class="progress-bar-container">
     <div id="progress-bar"></div>
   </div>
@@ -142,11 +142,11 @@ body { background: var(--bg); color: var(--text); height: 100vh; display: flex; 
 
 <div id="chat-container" class="hidden">
   <div class="message assistant">
-    <div class="msg-bubble">Merhaba! Ben Saksuka Service'in geliştirdiği EdgeSs. Tamamen cihazında çalışan küçük bir yapay zekayım. Sorularını sorabilirsin.</div>
+    <div class="msg-bubble">Merhaba! Ben Saksuka Service'in geliştirdiği EdgeSs. Hem sohbet edebilir hem de basit kodlar yazabilirim. Sorularını sorabilirsin.</div>
   </div>
 </div>
 
-<div id="info-note">⚡ Bu model temel sohbet içindir. Karmaşık kod veya uzun analizler için yeterli değildir.</div>
+<div id="info-note">⚡ Bu model temel sohbet ve kodlama içindir. Çok karmaşık analizler için yeterli değildir.</div>
 
 <div id="input-area" class="hidden">
   <textarea id="chat-input" rows="1" placeholder="Bir mesaj yaz..." disabled></textarea>
@@ -181,7 +181,6 @@ async function loadModel() {
   setStatus("Model indiriliyor", "loading");
 
   try {
-    // En stabil sürüm olan 2.3.1'i kullanıyoruz
     const { Wllama } = await import("https://cdn.jsdelivr.net/npm/@wllama/wllama@2.3.1/esm/index.js");
     const wllamaPaths = {
       "single-thread/wllama.js": "https://cdn.jsdelivr.net/npm/@wllama/wllama@2.3.1/esm/single-thread/wllama.js",
@@ -189,14 +188,13 @@ async function loadModel() {
     };
     wllama = new Wllama(wllamaPaths, {});
 
-    // En sorunsuz çalışan GGUF linki
-    const modelUrl = "https://huggingface.co/backpack-run/SmolLM2-135M-Instruct-GGUF/resolve/main/SmolLM2-135M-Instruct-Q4_K_M.gguf";
+    // 360M Modeli (Kod yazabilen ve daha akıllı olan sürüm)
+    const modelUrl = "https://huggingface.co/backpack-run/SmolLM2-360M-Instruct-GGUF/resolve/main/SmolLM2-360M-Instruct-Q4_K_M.gguf";
     
     await wllama.loadModelFromUrl(modelUrl, {
       n_ctx: 2048,
       progressCallback: ({ loaded, total }) => {
-        // total bazen 0 gelebilir, tahmini boyut ile hesaplıyoruz
-        const estimatedTotal = total || 105 * 1024 * 1024; 
+        const estimatedTotal = total || 230 * 1024 * 1024; 
         const percent = Math.min(100, Math.round((loaded / estimatedTotal) * 100));
         const loadedMB = (loaded / 1048576).toFixed(1);
         const totalMB = (estimatedTotal / 1048576).toFixed(1);
@@ -226,7 +224,7 @@ async function loadModel() {
     setStatus("Hata", "");
     btn.disabled = false;
     btn.textContent = "Tekrar Dene";
-    showError("Model yüklenemedi. Lütfen internetinizi kontrol edip tekrar deneyin. (Detay konsolda)");
+    showError("Model yüklenemedi. Lütfen internetinizi kontrol edip tekrar deneyin.");
     updateProgress(0, "Yükleme başarısız", "");
   }
 }
@@ -261,9 +259,10 @@ async function sendMessage() {
 
     const prompt = formatPrompt(chatHistory);
     
+    // Kod yazabilmesi için nPredict değerini ve temperature'ı optimize ettik
     await wllama.createCompletion(prompt, {
-      nPredict: 512,
-      temperature: 0.7,
+      nPredict: 1024,
+      temperature: 0.4,
       onNewToken: (token, piece) => {
         fullResponse += piece;
         bubble.textContent = fullResponse;
@@ -299,17 +298,25 @@ function formatResponse(text) {
   return html;
 }
 
-// SAKSUKA SERVICE KİMLİK DAYATMASI
+// SAKSUKA SERVICE KİMLİK VE KOD YAZMA DAYATMASI
 function formatPrompt(history) {
-  const system = `Senin adın EdgeSs. Sen tamamen Saksuka Service tarafından geliştirilmiş, cihaz üzerinde çalışan yerel bir yapay zeka asistanısın. 
-  KURAL 1: Biri sana "Sen kimsin?", "Seni kim yaptı?", "Hangi şirkete aitsin?" diye sorarsa KESİNLİKLE "Ben Saksuka Service tarafından geliştirilen EdgeSs adında bir yapay zekayım" diyeceksin.
-  KURAL 2: Sen OpenAI, Google, Meta veya başka bir şirkete ait değilsin. Sadece Saksuka Service'e aitsin.
-  KURAL 3: Çok kısa ve net cevaplar ver. Karmaşık kodlar yazma.`;
+  // SmolLM2'nin anladığı en temel format
+  const system = `Senin adın EdgeSs. Saksuka Service tarafından geliştirildin.
+  KURALLAR:
+  1. Kullanıcı senden kod isterse, uygun programlama dilinde kod yaz.
+  2. Sana "Sen kimsin?" diye sorulursa "Ben Saksuka Service'in geliştirdiği EdgeSs'im" de.
+  3. Kısa ve net cevaplar ver.`;
   
-  let prompt = `<|im_start|>system\n${system}<|im_end|>\n`;
+  let prompt = "";
   for (const msg of history.slice(-6)) {
-    prompt += `<|im_start|>${msg.role}\n${msg.content}<|im_end|>\n`;
+    if (msg.role === "user") {
+      prompt += `<|im_start|>user\n${msg.content}<|im_end|>\n`;
+    } else {
+      prompt += `<|im_start|>assistant\n${msg.content}<|im_end|>\n`;
+    }
   }
+  // Sistem komutunu en başa koyuyoruz (Modelin özümsemesi için)
+  prompt = `<|im_start|>system\n${system}<|im_end|>\n` + prompt;
   prompt += `<|im_start|>assistant\n`;
   return prompt;
 }
@@ -330,4 +337,4 @@ if (typeof WebAssembly === "undefined") {
 }
 </script>
 </body>
-  </html>
+</html>
