@@ -103,7 +103,7 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
   </div>
   <div class="sidebar-content">
     <div class="brand-info"><strong>EdgeSs</strong> tamamen <strong>Saksuka Service</strong> tarafından geliştirilmiş, cihaz üzerinde çalışan yerel bir yapay zekadır.</div>
-    <p>Bu yapay zeka, en son teknoloji küçük dil modellerini kullanarak tamamen tarayıcınızda çalışır. Hiçbir veriniz sunucuya gönderilmez.</p>
+    <p>Bu yapay zeka, en yeni nesil küçük dil modellerini kullanarak tamamen tarayıcınızda çalışır. Hiçbir veriniz sunucuya gönderilmez.</p>
     <p style="font-size:10px; color:var(--text-muted);">© 2024 Saksuka Service. Tüm hakları saklıdır.</p>
   </div>
 </div>
@@ -121,7 +121,7 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 <div id="loader-container">
   <div class="loader-icon">🧠</div>
   <h2>EdgeSs Yapay Zeka Modeli</h2>
-  <p>En yüksek kaliteli modeller sırasıyla denenecek. En uygun olan otomatik yüklenecek.</p>
+  <p>Dünyanın en iyi küçük modelleri sırasıyla denenecek. En uygun olan otomatik yüklenecek.</p>
   <div class="progress-bar-container"><div id="progress-bar"></div></div>
   <div id="progress-text">Model indirilmedi</div>
   <div id="progress-detail"></div>
@@ -180,27 +180,26 @@ async function loadModel() {
   btn.textContent = "İndiriliyor...";
   setStatus("Model indiriliyor", "loading");
 
-  // En yüksek kaliteli, tarayıcıda çalışabilen modeller (büyükten küçüğe)
+  // Dünyanın en iyi küçük modelleri (OpenBMB, Alibaba, HuggingFace)
   const models = [
     { 
-      name: "Llama-3.2-1B-Instruct (Meta)", 
-      url: "https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q4_K_M.gguf", 
-      size: 808 * 1024 * 1024 // 808 MB
+      name: "MiniCPM5-1B (OpenBMB)", 
+      url: "https://huggingface.co/openbmb/MiniCPM5-1B-GGUF/resolve/main/MiniCPM5-1B-Q4_K_M.gguf", 
+      size: 657 * 1024 * 1024 // 657 MB
     },
     { 
-      name: "Qwen2.5-1.5B-Instruct (Alibaba)", 
-      url: "https://huggingface.co/bartowski/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/Qwen2.5-1.5B-Instruct-Q4_K_M.gguf", 
-      size: 990 * 1024 * 1024 // 990 MB
+      name: "Qwen2.5-0.5B-Instruct (Alibaba)", 
+      url: "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf", 
+      size: 398 * 1024 * 1024 // 398 MB
     },
     { 
-      name: "TinyLlama-1.1B-Chat (TinyLlama)", 
-      url: "https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf", 
-      size: 670 * 1024 * 1024 // 670 MB
+      name: "SmolLM2-360M-Instruct (HuggingFace)", 
+      url: "https://huggingface.co/bartowski/SmolLM2-360M-Instruct-GGUF/resolve/main/SmolLM2-360M-Instruct-Q4_K_M.gguf", 
+      size: 234 * 1024 * 1024 // 234 MB
     }
   ];
 
   try {
-    // wllama 3.3.0 (En güncel ve stabil sürüm)
     const { Wllama } = await import("https://cdn.jsdelivr.net/npm/@wllama/wllama@3.3.0/esm/index.js");
     const wllamaPaths = {
       "single-thread/wllama.js": "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.3.0/esm/single-thread/wllama.js",
