@@ -19,6 +19,7 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
+/* HEADER */
 #header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg); flex-shrink: 0; z-index: 10; }
 .header-left { display: flex; align-items: center; gap: 10px; }
 .menu-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; display: flex; align-items: center; }
@@ -30,17 +31,22 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 #status-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text-muted); }
 #status-badge.ready #status-dot { background: var(--success); }
 
+/* SIDEBAR */
 #sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 260px; background: var(--bg); border-right: 1px solid var(--border); z-index: 100; transform: translateX(-100%); transition: transform 0.3s ease; display: flex; flex-direction: column; box-shadow: 4px 0 15px rgba(0,0,0,0.05); }
 #sidebar.open { transform: translateX(0); }
 .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 .sidebar-header h2 { font-size: 16px; font-weight: 700; color: var(--primary); }
 .close-menu { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-muted); }
-.sidebar-content { padding: 20px; flex: 1; overflow-y: auto; }
-.sidebar-content p { font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; }
-.sidebar-content .brand-info { padding: 12px; background: var(--surface); border-radius: 8px; font-size: 11px; margin-bottom: 12px; }
+.sidebar-content { padding: 20px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.sidebar-content .brand-info { padding: 12px; background: var(--surface); border-radius: 8px; font-size: 11px; margin-bottom: 12px; line-height: 1.5; }
 #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 99; display: none; opacity: 0; transition: opacity 0.3s; }
 #sidebar-overlay.on { display: block; opacity: 1; }
 
+.menu-item { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text); background: none; border: none; width: 100%; text-align: left; transition: 0.2s; }
+.menu-item:hover { background: var(--surface); }
+.menu-item svg { width: 18px; height: 18px; stroke: var(--text-muted); }
+
+/* LOADER */
 #loader-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; animation: fadeIn 0.5s ease; }
 #loader-container.hidden { display: none; }
 .loader-icon { font-size: 40px; margin-bottom: 16px; }
@@ -55,6 +61,7 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 #loader-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
 #loader-hint { font-size: 11px; color: var(--text-muted); margin-top: 12px; }
 
+/* CHAT */
 #chat-container { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; background: var(--bg); }
 #chat-container.hidden { display: none; }
 .message { display: flex; flex-direction: column; max-width: 90%; animation: slideUp 0.3s ease; }
@@ -90,6 +97,17 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 
 #center-brand { text-align: center; font-size: 11px; color: var(--text-muted); font-weight: 600; padding: 8px; letter-spacing: 0.3px; background: var(--bg); flex-shrink: 0; }
 
+/* AYARLAR MODALI */
+#settings-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; display: none; align-items: center; justify-content: center; }
+#settings-modal.on { display: flex; }
+.modal-content { background: var(--bg); width: 90%; max-width: 340px; border-radius: 12px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); animation: slideUp 0.3s ease; }
+.modal-content h3 { font-size: 16px; margin-bottom: 16px; }
+.modal-btn { width: 100%; padding: 12px; margin-bottom: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 8px; }
+.modal-btn:hover { background: var(--border); }
+.modal-btn.danger { color: var(--danger); border-color: #fecaca; background: #fef2f2; }
+.modal-btn.danger:hover { background: #fee2e2; }
+.modal-close { margin-top: 10px; width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer; }
+
 @media (max-width: 480px) { #header h1 { font-size: 16px; } .msg-bubble { font-size: 13px; } .message { max-width: 95%; } }
 </style>
 </head>
@@ -102,9 +120,14 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
     <button class="close-menu" id="close-menu">✕</button>
   </div>
   <div class="sidebar-content">
-    <div class="brand-info"><strong>EdgeSs</strong> tamamen <strong>Saksuka Service</strong> tarafından geliştirilmiş, cihaz üzerinde çalışan yerel bir yapay zekadır.</div>
-    <p>Bu yapay zeka, en yeni nesil küçük dil modellerini kullanarak tamamen tarayıcınızda çalışır. Hiçbir veriniz sunucuya gönderilmez.</p>
-    <p style="font-size:10px; color:var(--text-muted);">© 2024 Saksuka Service. Tüm hakları saklıdır.</p>
+    <div class="brand-info">
+      <strong>EdgeSs</strong> tamamen <strong>Saksuka Service</strong> tarafından geliştirilmiş, cihaz üzerinde çalışan yerel bir yapay zekadır. Hiçbir veriniz sunucuya gönderilmez.
+    </div>
+    <button class="menu-item" id="open-settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Ayarlar
+    </button>
+    <p style="font-size:10px; color:var(--text-muted); margin-top: auto; text-align:center;">© 2024 Saksuka Service.</p>
   </div>
 </div>
 
@@ -121,7 +144,7 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 <div id="loader-container">
   <div class="loader-icon">🧠</div>
   <h2>EdgeSs Yapay Zeka Modeli</h2>
-  <p>Dünyanın en iyi küçük modelleri sırasıyla denenecek. En uygun olan otomatik yüklenecek.</p>
+  <p>En zeki ve hızlı model (Qwen2.5-0.5B, ~278MB) yükleniyor. Sorun olursa otomatik olarak yedek modele geçilir.</p>
   <div class="progress-bar-container"><div id="progress-bar"></div></div>
   <div id="progress-text">Model indirilmedi</div>
   <div id="progress-detail"></div>
@@ -142,9 +165,18 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
   <button id="send-btn" disabled>Gönder</button>
 </div>
 
+<div id="settings-modal">
+  <div class="modal-content">
+    <h3>⚙️ Ayarlar</h3>
+    <button class="modal-btn" onclick="alert('EdgeSs v1.0\\nGeliştirici: Saksuka Service\\nModel: Qwen2.5-0.5B / SmolLM2-360M')">ℹ️ Uygulama Hakkında</button>
+    <button class="modal-btn danger" id="clear-chat-btn">🗑️ Sohbeti Temizle</button>
+    <button class="modal-close" id="close-settings-btn">Kapat</button>
+  </div>
+</div>
+
 <script type="module">
 const $ = id => document.getElementById(id);
-let wllama = null;
+let engine = null;
 let modelLoaded = false;
 let isGenerating = false;
 let chatHistory = [];
@@ -155,8 +187,19 @@ $("close-menu").onclick = closeMenu;
 $("sidebar-overlay").onclick = closeMenu;
 function closeMenu() { $("sidebar").classList.remove("open"); $("sidebar-overlay").classList.remove("on"); }
 
+// AYARLAR MODALI
+$("open-settings").onclick = () => { $("settings-modal").classList.add("on"); closeMenu(); };
+$("close-settings-btn").onclick = () => $("settings-modal").classList.remove("on");
+$("settings-modal").onclick = (e) => { if(e.target.id === "settings-modal") $("settings-modal").classList.remove("on"); };
+$("clear-chat-btn").onclick = () => {
+  chatHistory = [];
+  $("chat-container").innerHTML = `<div class="message assistant"><div class="msg-bubble">Sohbet temizlendi. Yeni bir konuşma başlatabilirsin.</div></div>`;
+  $("settings-modal").classList.remove("on");
+  alert("Sohbet geçmişi temizlendi.");
+};
+
 function setStatus(text, state) { $("status-text").textContent = text; $("status-badge").className = state || ""; }
-function showError(msg) { const b = $("error-banner"); b.textContent = msg; b.classList.add("show"); setTimeout(() => b.classList.remove("show"), 15000); }
+function showError(msg) { const b = $("error-banner"); b.textContent = msg; b.classList.add("show"); setTimeout(() => b.classList.remove("show"), 10000); }
 function updateProgress(percent, text, detail) {
   $("progress-bar").style.width = percent + "%";
   $("progress-text").textContent = text;
@@ -173,39 +216,35 @@ window.copyCode = function(btn) {
   });
 };
 
-// MODEL YÜKLEME (En İyi Modeller Sıralı)
+// MODEL YÜKLEME (WebLLM - En Zeki ve Hızlı Sistem)
 async function loadModel() {
   const btn = $("loader-btn");
   btn.disabled = true;
   btn.textContent = "İndiriliyor...";
   setStatus("Model indiriliyor", "loading");
 
-  // Dünyanın en iyi küçük modelleri (OpenBMB, Alibaba, HuggingFace)
+  // Sırayla denenecek en iyi modeller (WebLLM - MLC Formatı)
   const models = [
     { 
-      name: "MiniCPM5-1B (OpenBMB)", 
-      url: "https://huggingface.co/openbmb/MiniCPM5-1B-GGUF/resolve/main/MiniCPM5-1B-Q4_K_M.gguf", 
-      size: 657 * 1024 * 1024 // 657 MB
+      name: "Qwen2.5-0.5B-Instruct (En Zeki ve Hızlı)", 
+      id: "Qwen2.5-0.5B-Instruct-q4f16_1-MLC", 
+      size: 278 * 1024 * 1024 // 278 MB
     },
     { 
-      name: "Qwen2.5-0.5B-Instruct (Alibaba)", 
-      url: "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf", 
-      size: 398 * 1024 * 1024 // 398 MB
-    },
-    { 
-      name: "SmolLM2-360M-Instruct (HuggingFace)", 
-      url: "https://huggingface.co/bartowski/SmolLM2-360M-Instruct-GGUF/resolve/main/SmolLM2-360M-Instruct-Q4_K_M.gguf", 
-      size: 234 * 1024 * 1024 // 234 MB
+      name: "SmolLM2-360M-Instruct (Hafif Yedek)", 
+      id: "SmolLM2-360M-Instruct-q4f16_1-MLC", 
+      size: 210 * 1024 * 1024 // 210 MB
     }
   ];
 
   try {
-    const { Wllama } = await import("https://cdn.jsdelivr.net/npm/@wllama/wllama@3.3.0/esm/index.js");
-    const wllamaPaths = {
-      "single-thread/wllama.js": "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.3.0/esm/single-thread/wllama.js",
-      "single-thread/wllama.wasm": "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.3.0/esm/single-thread/wllama.wasm"
-    };
-    wllama = new Wllama(wllamaPaths, {});
+    // WebLLM'i CDN'den yükle
+    const webllm = await import("https://esm.run/@mlc-ai/web-llm");
+
+    // WebGPU kontrolü
+    if (!navigator.gpu) {
+      throw new Error("Tarayıcınız WebGPU desteklemiyor. Lütfen Chrome veya Edge kullanın.");
+    }
 
     let lastError = null;
 
@@ -213,14 +252,14 @@ async function loadModel() {
       const model = models[i];
       try {
         updateProgress(0, `${model.name} indiriliyor...`, "");
-        await wllama.loadModelFromUrl(model.url, {
-          n_ctx: 4096,
-          progressCallback: ({ loaded, total }) => {
-            const estimatedTotal = total || model.size;
-            const percent = Math.min(100, Math.round((loaded / estimatedTotal) * 100));
-            updateProgress(percent, `${model.name} indiriliyor... %${percent}`, `📥 ${(loaded/1048576).toFixed(1)} MB / ${(estimatedTotal/1048576).toFixed(1)} MB`);
+        
+        engine = await webllm.CreateMLCEngine(model.id, {
+          initProgressCallback: (progress) => {
+            const percent = Math.round(progress.progress * 100);
+            updateProgress(percent, `${model.name} indiriliyor... %${percent}`, progress.text || "");
           }
         });
+        
         modelLoaded = true;
         break; // Başarılıysa döngüden çık
       } catch (err) {
@@ -229,7 +268,7 @@ async function loadModel() {
         if (i === models.length - 1) {
           throw new Error(`Tüm modeller denendi ama başarısız oldu. Son hata: ${lastError.message}`);
         }
-        updateProgress(0, "Model indirilemedi, sıradaki model deneniyor...", "");
+        updateProgress(0, "Ana model yüklenemedi, yedek model deneniyor...", "");
       }
     }
 
@@ -250,7 +289,7 @@ async function loadModel() {
     setStatus("Hata", "");
     btn.disabled = false;
     btn.textContent = "Tekrar Dene";
-    showError("Model yüklenemedi. Lütfen internet bağlantınızı kontrol edin veya reklam engelleyicinizi kapatın.");
+    showError("Model yüklenemedi. Lütfen internetinizi ve tarayıcınızın WebGPU desteğini kontrol edin.");
     updateProgress(0, "Yükleme başarısız", "");
   }
 }
@@ -284,27 +323,29 @@ async function sendMessage() {
     thinkDiv.remove();
     $("chat-container").appendChild(botMsgDiv);
 
-    const messages = [
-      { role: "system", content: "Senin adın EdgeSs. Saksuka Service tarafından geliştirildin. Kullanıcı senden kod isterse kod yaz. Kısa ve net cevaplar ver." },
-      ...chatHistory.slice(-6)
-    ];
-
-    await wllama.createCompletion(messages, {
-      nPredict: 1024,
-      temperature: 0.1,      // Düşük sıcaklık = Saçmalamaz
-      top_k: 40,
-      top_p: 0.9,
-      repeat_penalty: 1.1,
+    // WebLLM Chat Completion
+    const chunks = await engine.chat.completions.create({
+      messages: [
+        { role: "system", content: "Senin adın EdgeSs. Saksuka Service tarafından geliştirildin. Kullanıcı senden kod isterse kod yaz. Kısa ve net cevaplar ver." },
+        ...chatHistory.slice(-6)
+      ],
+      temperature: 0.3,
+      max_tokens: 1024,
       stream: true,
-      onNewToken: (token, piece) => {
-        fullResponse += piece;
+    });
+
+    for await (const chunk of chunks) {
+      const delta = chunk.choices[0]?.delta?.content || "";
+      if (delta) {
+        fullResponse += delta;
         bubble.textContent = fullResponse;
         $("chat-container").scrollTop = $("chat-container").scrollHeight;
       }
-    });
+    }
 
     bubble.innerHTML = formatResponse(fullResponse);
     chatHistory.push({ role: "assistant", content: fullResponse });
+
   } catch (err) {
     console.error(err);
     thinkDiv.remove();
@@ -342,8 +383,8 @@ $("chat-input").onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.p
 $("chat-input").oninput = (e) => { e.target.style.height = "44px"; e.target.style.height = Math.min(100, e.target.scrollHeight) + "px"; };
 
 // BAŞLATMA KONTROLÜ
-if (typeof WebAssembly === "undefined") {
-  showError("Tarayıcınız WebAssembly desteklemiyor. EdgeSs çalışamaz.");
+if (!navigator.gpu) {
+  showError("Tarayıcınız WebGPU desteklemiyor. Lütfen Chrome veya Edge kullanın.");
   $("loader-btn").disabled = true;
   setStatus("Desteklenmiyor", "");
 } else {
