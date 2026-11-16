@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>EdgeSs - Saksuka Service</title>
+<title>EdgeSther - Saksuka Service</title>
 <style>
 :root {
   --bg: #ffffff; --surface: #f1f5f9; --border: #e2e8f0; --text: #0f172a;
@@ -121,7 +121,7 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
   </div>
   <div class="sidebar-content">
     <div class="brand-info">
-      <strong>EdgeSs</strong> tamamen <strong>Saksuka Service</strong> tarafından geliştirilmiş, cihaz üzerinde çalışan yerel bir yapay zekadır. Hiçbir veriniz sunucuya gönderilmez.
+      <strong>EdgeSther</strong> tamamen <strong>Saksuka Service</strong> tarafından geliştirilmiş, cihaz üzerinde çalışan yerel bir yapay zekadır. Hiçbir veriniz sunucuya gönderilmez.
     </div>
     <button class="menu-item" id="open-settings">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
@@ -134,7 +134,7 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 <header id="header">
   <div class="header-left">
     <button class="menu-btn" id="menu-btn">☰</button>
-    <h1>Edge<span>Ss</span></h1>
+    <h1>Edge<span>Sther</span></h1>
   </div>
   <div id="status-badge"><span id="status-dot"></span><span id="status-text">Başlatılıyor</span></div>
 </header>
@@ -143,8 +143,8 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 
 <div id="loader-container">
   <div class="loader-icon">🧠</div>
-  <h2>EdgeSs Yapay Zeka Modeli</h2>
-  <p>En zeki ve hızlı model (Qwen2.5-0.5B, ~278MB) yükleniyor. Sorun olursa otomatik olarak yedek modele geçilir.</p>
+  <h2>EdgeSther 5.6.1</h2>
+  <p>Saksuka Service tarafından geliştirilen yapay zeka modeli yükleniyor. Lütfen bekleyin.</p>
   <div class="progress-bar-container"><div id="progress-bar"></div></div>
   <div id="progress-text">Model indirilmedi</div>
   <div id="progress-detail"></div>
@@ -154,11 +154,11 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 
 <div id="chat-container" class="hidden">
   <div class="message assistant">
-    <div class="msg-bubble">Merhaba! Ben Saksuka Service'in geliştirdiği EdgeSs. Hem sohbet edebilir hem de kod yazabilirim. Sorularını sorabilirsin.</div>
+    <div class="msg-bubble">Merhaba! Ben Saksuka Service'in geliştirdiği EdgeSther. Hem sohbet edebilir hem de kod yazabilirim. Sorularını sorabilirsin.</div>
   </div>
 </div>
 
-<div id="center-brand">Saksuka Service temel aisi EdgeSs</div>
+<div id="center-brand">Saksuka Service temel aisi EdgeSther</div>
 
 <div id="input-area" class="hidden">
   <textarea id="chat-input" rows="1" placeholder="Bir mesaj yaz..." disabled></textarea>
@@ -168,7 +168,7 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 <div id="settings-modal">
   <div class="modal-content">
     <h3>⚙️ Ayarlar</h3>
-    <button class="modal-btn" onclick="alert('EdgeSs v1.0\\nGeliştirici: Saksuka Service\\nModel: Qwen2.5-0.5B / SmolLM2-360M')">ℹ️ Uygulama Hakkında</button>
+    <button class="modal-btn" onclick="alert('EdgeSther v5.6.1\\nGeliştirici: Saksuka Service')">ℹ️ Uygulama Hakkında</button>
     <button class="modal-btn danger" id="clear-chat-btn">🗑️ Sohbeti Temizle</button>
     <button class="modal-close" id="close-settings-btn">Kapat</button>
   </div>
@@ -216,66 +216,35 @@ window.copyCode = function(btn) {
   });
 };
 
-// MODEL YÜKLEME (WebLLM - En Zeki ve Hızlı Sistem)
+// MODEL YÜKLEME (Sadece Qwen2.5 - İsim Gizli)
 async function loadModel() {
   const btn = $("loader-btn");
   btn.disabled = true;
   btn.textContent = "İndiriliyor...";
-  setStatus("Model indiriliyor", "loading");
-
-  // Sırayla denenecek en iyi modeller (WebLLM - MLC Formatı)
-  const models = [
-    { 
-      name: "Qwen2.5-0.5B-Instruct (En Zeki ve Hızlı)", 
-      id: "Qwen2.5-0.5B-Instruct-q4f16_1-MLC", 
-      size: 278 * 1024 * 1024 // 278 MB
-    },
-    { 
-      name: "SmolLM2-360M-Instruct (Hafif Yedek)", 
-      id: "SmolLM2-360M-Instruct-q4f16_1-MLC", 
-      size: 210 * 1024 * 1024 // 210 MB
-    }
-  ];
+  setStatus("EdgeSther 5.6.1 iniyor", "loading");
 
   try {
-    // WebLLM'i CDN'den yükle
     const webllm = await import("https://esm.run/@mlc-ai/web-llm");
 
-    // WebGPU kontrolü
     if (!navigator.gpu) {
       throw new Error("Tarayıcınız WebGPU desteklemiyor. Lütfen Chrome veya Edge kullanın.");
     }
 
-    let lastError = null;
-
-    for (let i = 0; i < models.length; i++) {
-      const model = models[i];
-      try {
-        updateProgress(0, `${model.name} indiriliyor...`, "");
-        
-        engine = await webllm.CreateMLCEngine(model.id, {
-          initProgressCallback: (progress) => {
-            const percent = Math.round(progress.progress * 100);
-            updateProgress(percent, `${model.name} indiriliyor... %${percent}`, progress.text || "");
-          }
-        });
-        
-        modelLoaded = true;
-        break; // Başarılıysa döngüden çık
-      } catch (err) {
-        console.warn(`${model.name} başarısız:`, err);
-        lastError = err;
-        if (i === models.length - 1) {
-          throw new Error(`Tüm modeller denendi ama başarısız oldu. Son hata: ${lastError.message}`);
-        }
-        updateProgress(0, "Ana model yüklenemedi, yedek model deneniyor...", "");
+    // SADECE QWEN 2.5 (Kullanıcı sadece EdgeSther görecek)
+    const modelId = "Qwen2.5-0.5B-Instruct-q4f16_1-MLC";
+    
+    updateProgress(0, `EdgeSther 5.6.1 iniyor...`, "");
+    
+    engine = await webllm.CreateMLCEngine(modelId, {
+      initProgressCallback: (progress) => {
+        const percent = Math.round(progress.progress * 100);
+        updateProgress(percent, `EdgeSther 5.6.1 iniyor... %${percent}`, progress.text || "");
       }
-    }
-
-    if (!modelLoaded) throw new Error("Model yüklenemedi.");
-
+    });
+    
+    modelLoaded = true;
     setStatus("Hazır", "ready");
-    updateProgress(100, "Model yüklendi!", "✅ Tamamlandı");
+    updateProgress(100, "EdgeSther 5.6.1 yüklendi!", "✅ Tamamlandı");
 
     $("loader-container").classList.add("hidden");
     $("chat-container").classList.remove("hidden");
@@ -289,7 +258,7 @@ async function loadModel() {
     setStatus("Hata", "");
     btn.disabled = false;
     btn.textContent = "Tekrar Dene";
-    showError("Model yüklenemedi. Lütfen internetinizi ve tarayıcınızın WebGPU desteğini kontrol edin.");
+    showError("EdgeSther 5.6.1 yüklenemedi. Lütfen internetinizi kontrol edin.");
     updateProgress(0, "Yükleme başarısız", "");
   }
 }
@@ -310,7 +279,7 @@ async function sendMessage() {
 
   const thinkDiv = document.createElement("div");
   thinkDiv.className = "message assistant";
-  thinkDiv.innerHTML = `<div class="thinking"><div class="thinking-anim"><span></span><span></span><span></span></div><span>EdgeSs düşünüyor...</span></div>`;
+  thinkDiv.innerHTML = `<div class="thinking"><div class="thinking-anim"><span></span><span></span><span></span></div><span>EdgeSther düşünüyor...</span></div>`;
   $("chat-container").appendChild(thinkDiv);
   $("chat-container").scrollTop = $("chat-container").scrollHeight;
 
@@ -323,10 +292,9 @@ async function sendMessage() {
     thinkDiv.remove();
     $("chat-container").appendChild(botMsgDiv);
 
-    // WebLLM Chat Completion
     const chunks = await engine.chat.completions.create({
       messages: [
-        { role: "system", content: "Senin adın EdgeSs. Saksuka Service tarafından geliştirildin. Kullanıcı senden kod isterse kod yaz. Kısa ve net cevaplar ver." },
+        { role: "system", content: "Senin adın EdgeSther. Saksuka Service tarafından geliştirildin. Kullanıcı senden kod isterse kod yaz. Kısa ve net cevaplar ver." },
         ...chatHistory.slice(-6)
       ],
       temperature: 0.3,
@@ -388,7 +356,7 @@ if (!navigator.gpu) {
   $("loader-btn").disabled = true;
   setStatus("Desteklenmiyor", "");
 } else {
-  setStatus("Hazır (model indirilmedi)", "");
+  setStatus("Hazır (EdgeSther 5.6.1 indirilmedi)", "");
 }
 </script>
 </body>
