@@ -63,9 +63,13 @@ body { background: var(--bg); color: var(--text); height: 100vh; display: flex; 
 .msg-bubble { padding: 12px 18px; border-radius: 16px; font-size: 15px; line-height: 1.6; word-wrap: break-word; white-space: pre-wrap; }
 .message.user .msg-bubble { background: var(--primary); color: #fff; border-bottom-right-radius: 4px; }
 .message.assistant .msg-bubble { background: var(--surface); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+
+/* KOD BLOĞU VE KOPYALA BUTONU */
+.code-header { display: flex; justify-content: space-between; align-items: center; background: #1e1e1e; color: #d4d4d4; padding: 8px 12px; border-top-left-radius: 8px; border-top-right-radius: 8px; font-size: 12px; margin-top: 10px; font-family: ui-monospace, Consolas, monospace; }
+.code-header button { background: #3b82f6; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; transition: 0.2s; }
+.code-header button:hover { background: #2563eb; }
+.msg-bubble pre { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; overflow-x: auto; margin: 0; font-family: ui-monospace, Consolas, monospace; font-size: 13px; }
 .msg-bubble code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, Consolas, monospace; font-size: 13px; border: 1px solid var(--border); }
-.msg-bubble pre { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; overflow-x: auto; margin: 8px 0; font-family: ui-monospace, Consolas, monospace; font-size: 13px; }
-.msg-bubble pre code { background: none; border: none; padding: 0; color: inherit; }
 
 .thinking { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 13px; padding: 12px 18px; background: var(--surface); border-radius: 16px; border: 1px solid var(--border); border-bottom-left-radius: 4px; }
 .thinking-anim { display: flex; gap: 4px; }
@@ -84,8 +88,17 @@ body { background: var(--bg); color: var(--text); height: 100vh; display: flex; 
 
 #error-banner { display: none; padding: 12px 20px; background: #fef2f2; border-bottom: 1px solid #fecaca; color: var(--danger); font-size: 13px; text-align: center; }
 #error-banner.show { display: block; }
-#info-note { padding: 10px 20px; font-size: 11px; color: var(--text-muted); text-align: center; background: var(--surface); border-top: 1px solid var(--border); display: none; }
-#info-note.show { display: block; }
+
+/* ORTADAKİ YAZI */
+#center-brand { 
+  text-align: center; 
+  font-size: 13px; 
+  color: var(--text-muted); 
+  font-weight: 600; 
+  padding: 10px; 
+  letter-spacing: 0.5px;
+  background: var(--bg);
+}
 
 @media (max-width: 768px) { .message { max-width: 90%; } #header h1 { font-size: 18px; } }
 </style>
@@ -123,7 +136,7 @@ body { background: var(--bg); color: var(--text); height: 100vh; display: flex; 
 <div id="loader-container">
   <div class="loader-icon">🧠</div>
   <h2>Saksuka Service Yapay Zeka Modeli</h2>
-  <p>Model indirilecek. Ana model (~234 MB) başarısız olursa, otomatik olarak daha küçük bir yedek model (~70 MB) denenecek.</p>
+  <p>Model indirilecek. Hızlandırılmış ve kod yazma yeteneği geliştirilmiş sürüm.</p>
   <div class="progress-bar-container">
     <div id="progress-bar"></div>
   </div>
@@ -135,11 +148,12 @@ body { background: var(--bg); color: var(--text); height: 100vh; display: flex; 
 
 <div id="chat-container" class="hidden">
   <div class="message assistant">
-    <div class="msg-bubble">Merhaba! Ben Saksuka Service'in geliştirdiği EdgeSs. Hem sohbet edebilir hem de basit kodlar yazabilirim. Sorularını sorabilirsin.</div>
+    <div class="msg-bubble">Merhaba! Ben Saksuka Service'in geliştirdiği EdgeSs. Hem sohbet edebilir hem de kod yazabilirim. Sorularını sorabilirsin.</div>
   </div>
 </div>
 
-<div id="info-note">⚡ Bu model temel sohbet ve kodlama içindir. Çok karmaşık analizler için yeterli değildir.</div>
+<!-- ORTADAKİ UYARI YAZISI BURADA -->
+<div id="center-brand">Saksuka Service temel aisi EdgeSs</div>
 
 <div id="input-area" class="hidden">
   <textarea id="chat-input" rows="1" placeholder="Bir mesaj yaz..." disabled></textarea>
@@ -166,25 +180,25 @@ function updateProgress(percent, text, detail) {
   $("progress-detail").textContent = detail || "";
 }
 
-// Yedekli Model İndirme Sistemi
+// KOD KOPYALAMA FONKSİYONU
+window.copyCode = function(btn) {
+  const pre = btn.closest('.msg-bubble').querySelector('pre');
+  const code = pre.innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = "Kopyalandı!";
+    setTimeout(() => btn.textContent = "Kopyala", 2000);
+  });
+};
+
 async function loadModel() {
   const btn = $("loader-btn");
   btn.disabled = true;
   btn.textContent = "İndiriliyor...";
   setStatus("Model indiriliyor", "loading");
 
-  // Ana model ve yedek model listesi
   const models = [
-    { 
-      url: "https://huggingface.co/bartowski/SmolLM2-360M-Instruct-GGUF/resolve/main/SmolLM2-360M-Instruct-Q4_K_M.gguf", 
-      size: 234 * 1024 * 1024, 
-      name: "Ana Model (360M)" 
-    },
-    { 
-      url: "https://huggingface.co/bartowski/SmolLM2-135M-Instruct-GGUF/resolve/main/SmolLM2-135M-Instruct-Q4_K_M.gguf", 
-      size: 70 * 1024 * 1024, 
-      name: "Yedek Model (135M)" 
-    }
+    { url: "https://huggingface.co/bartowski/SmolLM2-360M-Instruct-GGUF/resolve/main/SmolLM2-360M-Instruct-Q4_K_M.gguf", size: 234 * 1024 * 1024 },
+    { url: "https://huggingface.co/bartowski/SmolLM2-135M-Instruct-GGUF/resolve/main/SmolLM2-135M-Instruct-Q4_K_M.gguf", size: 70 * 1024 * 1024 }
   ];
 
   try {
@@ -198,69 +212,37 @@ async function loadModel() {
     let lastError = null;
 
     for (let i = 0; i < models.length; i++) {
-      const model = models[i];
       try {
-        updateProgress(0, `${model.name} indiriliyor...`, "");
-        
-        await wllama.loadModelFromUrl(model.url, {
+        updateProgress(0, `Model indiriliyor...`, "");
+        await wllama.loadModelFromUrl(models[i].url, {
           n_ctx: 2048,
           progressCallback: ({ loaded, total }) => {
-            const estimatedTotal = total || model.size;
+            const estimatedTotal = total || models[i].size;
             const percent = Math.min(100, Math.round((loaded / estimatedTotal) * 100));
-            const loadedMB = (loaded / 1048576).toFixed(1);
-            const totalMB = (estimatedTotal / 1048576).toFixed(1);
-            updateProgress(percent, `${model.name} indiriliyor... %${percent}`, `📥 ${loadedMB} MB / ${totalMB} MB`);
+            updateProgress(percent, `Model indiriliyor... %${percent}`, `📥 ${(loaded/1048576).toFixed(1)} MB / ${(estimatedTotal/1048576).toFixed(1)} MB`);
           }
         });
-
-        // Başarılıysa döngüden çık
         modelLoaded = true;
         break;
       } catch (err) {
-        console.warn(`${model.name} başarısız:`, err);
         lastError = err;
-        // Son model değilse devam et
-        if (i === models.length - 1) {
-          throw new Error(`Tüm modeller denendi ama başarısız oldu. Son hata: ${lastError.message || lastError}`);
-        }
-        // Yedek modele geçerken kullanıcıya bilgi ver
-        updateProgress(0, "Ana model indirilemedi, yedek model deneniyor...", "");
+        if (i === models.length - 1) throw new Error(lastError.message);
       }
     }
 
-    if (!modelLoaded) throw new Error("Model yüklenemedi.");
-
     setStatus("Hazır", "ready");
     updateProgress(100, "Model yüklendi!", "✅ Tamamlandı");
-
     $("loader-container").classList.add("hidden");
     $("chat-container").classList.remove("hidden");
     $("input-area").classList.remove("hidden");
-    $("info-note").classList.add("show");
     $("chat-input").disabled = false;
     $("send-btn").disabled = false;
-    $("chat-input").focus();
 
   } catch (err) {
-    console.error("Model yükleme hatası:", err);
     setStatus("Hata", "");
     btn.disabled = false;
     btn.textContent = "Tekrar Dene";
-    
-    // Hatayı kullanıcıya detaylı açıkla
-    let reason = "Bilinmeyen bir hata oluştu.";
-    if (err.message.includes("fetch") || err.message.includes("Network")) {
-      reason = "İnternet bağlantınız kesilmiş olabilir veya Hugging Face sunucularına erişim engellenmiş olabilir.";
-    } else if (err.message.includes("memory") || err.message.includes("Memory")) {
-      reason = "Cihazınızın belleği (RAM) bu modeli çalıştırmak için yetersiz olabilir.";
-    } else if (err.message.includes("GGUF")) {
-      reason = "Model dosyası bozuk veya uyumsuz. Lütfen tekrar deneyin.";
-    } else if (err.message.includes("Tüm modeller")) {
-      reason = "Ana model ve yedek model indirilemedi. İnternet bağlantınızı kontrol edin veya reklam engelleyicinizi kapatın.";
-    }
-    
-    showError(`Model yüklenemedi. Sebep: ${reason} (Detay: ${err.message.substring(0, 100)})`);
-    updateProgress(0, "Yükleme başarısız", "");
+    showError("Model yüklenemedi. Lütfen internetinizi kontrol edin.");
   }
 }
 
@@ -294,9 +276,13 @@ async function sendMessage() {
 
     const prompt = formatPrompt(chatHistory);
     
+    // HIZLANDIRMA VE SAÇMALAMAYI ÖNLEME AYARLARI
     await wllama.createCompletion(prompt, {
       nPredict: 1024,
-      temperature: 0.4,
+      temperature: 0.1,      // Düşük sıcaklık = Daha az saçmalama
+      top_k: 40,             // Sadece en olası kelimelere odaklan
+      top_p: 0.9,
+      repeat_penalty: 1.1,   // Aynı şeyi tekrar etmesini engelle
       onNewToken: (token, piece) => {
         fullResponse += piece;
         bubble.textContent = fullResponse;
@@ -307,9 +293,8 @@ async function sendMessage() {
     bubble.innerHTML = formatResponse(fullResponse);
     chatHistory.push({ role: "assistant", content: fullResponse });
   } catch (err) {
-    console.error(err);
     thinkDiv.remove();
-    addMessage("assistant", "Üzgünüm, bir hata oluştu ve cevap üretemedim.");
+    addMessage("assistant", "Üzgünüm, bir hata oluştu.");
   } finally {
     isGenerating = false;
     $("send-btn").disabled = false;
@@ -325,17 +310,30 @@ function addMessage(role, text) {
   $("chat-container").scrollTop = $("chat-container").scrollHeight;
 }
 function escapeHtml(text) { return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+// KOD BLOKLARINI VE KOPYALA BUTONUNU OLUŞTURMA
 function formatResponse(text) {
   let html = escapeHtml(text);
-  html = html.replace(/```(\w*)\n?([\s\S]*?)```/g, (m, lang, code) => `<pre><code>${code.trim()}</code></pre>`);
+  // Kod bloklarını yakala
+  html = html.replace(/```(\w*)\n?([\s\S]*?)```/g, (m, lang, code) => {
+    const language = lang ? lang.toUpperCase() : 'KOD';
+    return `<div class="code-header"><span>${language}</span><button onclick="copyCode(this)">Kopyala</button></div><pre><code>${code.trim()}</code></pre>`;
+  });
+  // Satır içi kodlar
   html = html.replace(/`([^`\n]+)`/g, "<code>$1</code>");
   return html;
 }
 
+// KESİN KURAL: SAYI ÜRETME, KOD YAZ.
 function formatPrompt(history) {
-  const system = `Senin adın EdgeSs. Saksuka Service tarafından geliştirildin. Kullanıcı senden kod isterse kod yaz. Kısa ve net cevaplar ver.`;
+  const system = `Senin adın EdgeSs. Saksuka Service tarafından geliştirildin.
+  KURALLAR:
+  1. KESİNLİKLE anlamsız sayılar üretme (örn: 101,10832). Sadece düzgün Türkçe metin veya kod yaz.
+  2. Kullanıcı senden kod isterse, uygun programlama dilinde kod yaz. Kodları üç ters tırnak ( \`\`\` ) içine al.
+  3. Kısa ve net cevaplar ver.`;
+  
   let prompt = `<|im_start|>system\n${system}<|im_end|>\n`;
-  for (const msg of history.slice(-6)) {
+  for (const msg of history.slice(-4)) { // Geçmişi kısa tut
     prompt += `<|im_start|>${msg.role}\n${msg.content}<|im_end|>\n`;
   }
   prompt += `<|im_start|>assistant\n`;
