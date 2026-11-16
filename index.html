@@ -103,7 +103,7 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
   </div>
   <div class="sidebar-content">
     <div class="brand-info"><strong>EdgeSs</strong> tamamen <strong>Saksuka Service</strong> tarafından geliştirilmiş, cihaz üzerinde çalışan yerel bir yapay zekadır.</div>
-    <p>Bu yapay zeka, Saksuka Service tarafından optimize edilmiş bir model kullanarak tamamen tarayıcınızda çalışır. Hiçbir veriniz sunucuya gönderilmez.</p>
+    <p>Bu yapay zeka, en son teknoloji küçük dil modellerini kullanarak tamamen tarayıcınızda çalışır. Hiçbir veriniz sunucuya gönderilmez.</p>
     <p style="font-size:10px; color:var(--text-muted);">© 2024 Saksuka Service. Tüm hakları saklıdır.</p>
   </div>
 </div>
@@ -121,7 +121,7 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 <div id="loader-container">
   <div class="loader-icon">🧠</div>
   <h2>EdgeSs Yapay Zeka Modeli</h2>
-  <p>Model indirilecek. Qwen2.5 tabanlı, saçmalamayan ve hızlı sürüm.</p>
+  <p>En yüksek kaliteli modeller sırasıyla denenecek. En uygun olan otomatik yüklenecek.</p>
   <div class="progress-bar-container"><div id="progress-bar"></div></div>
   <div id="progress-text">Model indirilmedi</div>
   <div id="progress-detail"></div>
@@ -173,15 +173,34 @@ window.copyCode = function(btn) {
   });
 };
 
-// MODEL YÜKLEME (wllama 3.x - WASM)
+// MODEL YÜKLEME (En İyi Modeller Sıralı)
 async function loadModel() {
   const btn = $("loader-btn");
   btn.disabled = true;
   btn.textContent = "İndiriliyor...";
   setStatus("Model indiriliyor", "loading");
 
+  // En yüksek kaliteli, tarayıcıda çalışabilen modeller (büyükten küçüğe)
+  const models = [
+    { 
+      name: "Llama-3.2-1B-Instruct (Meta)", 
+      url: "https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q4_K_M.gguf", 
+      size: 808 * 1024 * 1024 // 808 MB
+    },
+    { 
+      name: "Qwen2.5-1.5B-Instruct (Alibaba)", 
+      url: "https://huggingface.co/bartowski/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/Qwen2.5-1.5B-Instruct-Q4_K_M.gguf", 
+      size: 990 * 1024 * 1024 // 990 MB
+    },
+    { 
+      name: "TinyLlama-1.1B-Chat (TinyLlama)", 
+      url: "https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf", 
+      size: 670 * 1024 * 1024 // 670 MB
+    }
+  ];
+
   try {
-    // En yeni wllama sürümü (single-thread, WASM uyumlu)
+    // wllama 3.3.0 (En güncel ve stabil sürüm)
     const { Wllama } = await import("https://cdn.jsdelivr.net/npm/@wllama/wllama@3.3.0/esm/index.js");
     const wllamaPaths = {
       "single-thread/wllama.js": "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.3.0/esm/single-thread/wllama.js",
@@ -189,21 +208,34 @@ async function loadModel() {
     };
     wllama = new Wllama(wllamaPaths, {});
 
-    // Qwen2.5-0.5B: Çok daha zeki, Türkçe desteği iyi, sayı üretmez.
-    const modelUrl = "https://huggingface.co/bartowski/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/Qwen2.5-0.5B-Instruct-Q4_K_M.gguf";
-    
-    await wllama.loadModelFromUrl(modelUrl, {
-      n_ctx: 4096, // Daha fazla bağlam
-      progressCallback: ({ loaded, total }) => {
-        const estimatedTotal = total || 398 * 1024 * 1024; // Qwen 0.5B ~398MB
-        const percent = Math.min(100, Math.round((loaded / estimatedTotal) * 100));
-        const loadedMB = (loaded / 1048576).toFixed(1);
-        const totalMB = (estimatedTotal / 1048576).toFixed(1);
-        updateProgress(percent, `Model indiriliyor... %${percent}`, `📥 ${loadedMB} MB / ${totalMB} MB`);
-      }
-    });
+    let lastError = null;
 
-    modelLoaded = true;
+    for (let i = 0; i < models.length; i++) {
+      const model = models[i];
+      try {
+        updateProgress(0, `${model.name} indiriliyor...`, "");
+        await wllama.loadModelFromUrl(model.url, {
+          n_ctx: 4096,
+          progressCallback: ({ loaded, total }) => {
+            const estimatedTotal = total || model.size;
+            const percent = Math.min(100, Math.round((loaded / estimatedTotal) * 100));
+            updateProgress(percent, `${model.name} indiriliyor... %${percent}`, `📥 ${(loaded/1048576).toFixed(1)} MB / ${(estimatedTotal/1048576).toFixed(1)} MB`);
+          }
+        });
+        modelLoaded = true;
+        break; // Başarılıysa döngüden çık
+      } catch (err) {
+        console.warn(`${model.name} başarısız:`, err);
+        lastError = err;
+        if (i === models.length - 1) {
+          throw new Error(`Tüm modeller denendi ama başarısız oldu. Son hata: ${lastError.message}`);
+        }
+        updateProgress(0, "Model indirilemedi, sıradaki model deneniyor...", "");
+      }
+    }
+
+    if (!modelLoaded) throw new Error("Model yüklenemedi.");
+
     setStatus("Hazır", "ready");
     updateProgress(100, "Model yüklendi!", "✅ Tamamlandı");
 
@@ -219,7 +251,7 @@ async function loadModel() {
     setStatus("Hata", "");
     btn.disabled = false;
     btn.textContent = "Tekrar Dene";
-    showError("Model yüklenemedi. Lütfen internetinizi kontrol edin.");
+    showError("Model yüklenemedi. Lütfen internet bağlantınızı kontrol edin veya reklam engelleyicinizi kapatın.");
     updateProgress(0, "Yükleme başarısız", "");
   }
 }
@@ -253,20 +285,18 @@ async function sendMessage() {
     thinkDiv.remove();
     $("chat-container").appendChild(botMsgDiv);
 
-    // wllama 3.x'in Chat Template özelliğini kullanıyoruz
-    // Bu, modelin kendi eğitim formatını (Qwen ChatML) otomatik uygular.
     const messages = [
       { role: "system", content: "Senin adın EdgeSs. Saksuka Service tarafından geliştirildin. Kullanıcı senden kod isterse kod yaz. Kısa ve net cevaplar ver." },
       ...chatHistory.slice(-6)
     ];
 
-    const chunks = await wllama.createCompletion(messages, {
+    await wllama.createCompletion(messages, {
       nPredict: 1024,
-      temperature: 0.1,     // Çok düşük sıcaklık = saçmalamaz
+      temperature: 0.1,      // Düşük sıcaklık = Saçmalamaz
       top_k: 40,
       top_p: 0.9,
-      repeat_penalty: 1.1,  // Tekrarı önler
-      stream: true,         // Canlı yazma efekti
+      repeat_penalty: 1.1,
+      stream: true,
       onNewToken: (token, piece) => {
         fullResponse += piece;
         bubble.textContent = fullResponse;
