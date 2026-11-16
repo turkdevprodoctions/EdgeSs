@@ -19,6 +19,7 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
+/* HEADER */
 #header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg); flex-shrink: 0; z-index: 10; }
 .header-left { display: flex; align-items: center; gap: 10px; }
 .menu-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; display: flex; align-items: center; }
@@ -26,10 +27,10 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 #header h1 span { color: var(--primary); }
 #status-badge { font-size: 10px; padding: 3px 8px; border-radius: 12px; background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
 #status-badge.ready { background: #ecfdf5; border-color: var(--success); color: var(--success); }
-#status-badge.loading { animation: pulse 1.5s infinite; }
 #status-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text-muted); }
 #status-badge.ready #status-dot { background: var(--success); }
 
+/* SIDEBAR */
 #sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 260px; background: var(--bg); border-right: 1px solid var(--border); z-index: 100; transform: translateX(-100%); transition: transform 0.3s ease; display: flex; flex-direction: column; box-shadow: 4px 0 15px rgba(0,0,0,0.05); }
 #sidebar.open { transform: translateX(0); }
 .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
@@ -44,22 +45,8 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 .menu-item:hover { background: var(--surface); }
 .menu-item svg { width: 18px; height: 18px; stroke: var(--text-muted); }
 
-#loader-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; animation: fadeIn 0.5s ease; }
-#loader-container.hidden { display: none; }
-.loader-icon { font-size: 40px; margin-bottom: 16px; }
-#loader-container h2 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-#loader-container p { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; max-width: 280px; }
-.progress-bar-container { width: 100%; max-width: 280px; height: 6px; background: var(--surface); border-radius: 3px; overflow: hidden; margin-bottom: 10px; border: 1px solid var(--border); }
-#progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary), #8b5cf6); border-radius: 3px; transition: width 0.3s ease; }
-#progress-text { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
-#progress-detail { font-size: 10px; color: var(--text-muted); margin-top: 3px; font-family: ui-monospace, monospace; }
-#loader-btn { margin-top: 16px; padding: 12px 28px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-#loader-btn:hover { background: var(--primary-hover); }
-#loader-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
-#loader-hint { font-size: 11px; color: var(--text-muted); margin-top: 12px; }
-
+/* CHAT */
 #chat-container { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; background: var(--bg); }
-#chat-container.hidden { display: none; }
 .message { display: flex; flex-direction: column; max-width: 90%; animation: slideUp 0.3s ease; }
 .message.user { align-self: flex-end; align-items: flex-end; }
 .message.assistant { align-self: flex-start; align-items: flex-start; }
@@ -79,8 +66,8 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 .thinking-anim span:nth-child(1) { animation-delay: -0.32s; }
 .thinking-anim span:nth-child(2) { animation-delay: -0.16s; }
 
+/* INPUT */
 #input-area { padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--border); background: var(--bg); display: flex; gap: 8px; align-items: flex-end; flex-shrink: 0; }
-#input-area.hidden { display: none; }
 #chat-input { flex: 1; resize: none; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; line-height: 1.4; max-height: 100px; min-height: 44px; outline: none; background: var(--surface); transition: border-color 0.2s; }
 #chat-input:focus { border-color: var(--primary); background: var(--bg); }
 #chat-input:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -93,6 +80,7 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 
 #center-brand { text-align: center; font-size: 11px; color: var(--text-muted); font-weight: 600; padding: 8px; letter-spacing: 0.3px; background: var(--bg); flex-shrink: 0; }
 
+/* AYARLAR MODALI */
 #settings-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; display: none; align-items: center; justify-content: center; }
 #settings-modal.on { display: flex; }
 .modal-content { background: var(--bg); width: 90%; max-width: 340px; border-radius: 12px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); animation: slideUp 0.3s ease; }
@@ -116,7 +104,7 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
   </div>
   <div class="sidebar-content">
     <div class="brand-info">
-      <strong>EdgeSther</strong> tamamen <strong>Saksuka Service</strong> tarafından geliştirilmiş, cihaz üzerinde çalışan yerel bir yapay zekadır. Hiçbir veriniz sunucuya gönderilmez.
+      <strong>EdgeSther</strong> tamamen <strong>Saksuka Service</strong> tarafından geliştirilmiş, bulut üzerinden çalışan gelişmiş bir yapay zekadır. Hiçbir veriniz kalıcı olarak saklanmaz.
     </div>
     <button class="menu-item" id="open-settings">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
@@ -131,23 +119,12 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
     <button class="menu-btn" id="menu-btn">☰</button>
     <h1>Edge<span>Sther</span></h1>
   </div>
-  <div id="status-badge"><span id="status-dot"></span><span id="status-text">Başlatılıyor</span></div>
+  <div id="status-badge"><span id="status-dot"></span><span id="status-text">Çevrimiçi</span></div>
 </header>
 
 <div id="error-banner"></div>
 
-<div id="loader-container">
-  <div class="loader-icon">🧠</div>
-  <h2>EdgeSther 5.6.1</h2>
-  <p>Saksuka Service tarafından geliştirilen yapay zeka modeli yükleniyor. Lütfen bekleyin.</p>
-  <div class="progress-bar-container"><div id="progress-bar"></div></div>
-  <div id="progress-text">Model indirilmedi</div>
-  <div id="progress-detail"></div>
-  <button id="loader-btn">Modeli İndir ve Başlat</button>
-  <div id="loader-hint">İlk açılışta internet gerekir. Sonrasında çevrimdışı çalışır.</div>
-</div>
-
-<div id="chat-container" class="hidden">
+<div id="chat-container">
   <div class="message assistant">
     <div class="msg-bubble">Merhaba! Ben Saksuka Service'in geliştirdiği EdgeSther. Hem sohbet edebilir hem de kod yazabilirim. Sorularını sorabilirsin.</div>
   </div>
@@ -155,9 +132,9 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
 
 <div id="center-brand">Saksuka Service temel aisi EdgeSther</div>
 
-<div id="input-area" class="hidden">
-  <textarea id="chat-input" rows="1" placeholder="Bir mesaj yaz..." disabled></textarea>
-  <button id="send-btn" disabled>Gönder</button>
+<div id="input-area">
+  <textarea id="chat-input" rows="1" placeholder="Bir mesaj yaz..."></textarea>
+  <button id="send-btn">Gönder</button>
 </div>
 
 <div id="settings-modal">
@@ -169,12 +146,10 @@ body { background: var(--bg); color: var(--text); display: flex; flex-direction:
   </div>
 </div>
 
-<script type="module">
+<script>
 const $ = id => document.getElementById(id);
-let wllama = null;
-let modelLoaded = false;
-let isGenerating = false;
 let chatHistory = [];
+let isGenerating = false;
 
 // HAMBURGER
 $("menu-btn").onclick = () => { $("sidebar").classList.add("open"); $("sidebar-overlay").classList.add("on"); };
@@ -190,16 +165,7 @@ $("clear-chat-btn").onclick = () => {
   chatHistory = [];
   $("chat-container").innerHTML = `<div class="message assistant"><div class="msg-bubble">Sohbet temizlendi. Yeni bir konuşma başlatabilirsin.</div></div>`;
   $("settings-modal").classList.remove("on");
-  alert("Sohbet geçmişi temizlendi.");
 };
-
-function setStatus(text, state) { $("status-text").textContent = text; $("status-badge").className = state || ""; }
-function showError(msg) { const b = $("error-banner"); b.textContent = msg; b.classList.add("show"); setTimeout(() => b.classList.remove("show"), 10000); }
-function updateProgress(percent, text, detail) {
-  $("progress-bar").style.width = percent + "%";
-  $("progress-text").textContent = text;
-  $("progress-detail").textContent = detail || "";
-}
 
 // KOD KOPYALAMA
 window.copyCode = function(btn) {
@@ -211,62 +177,18 @@ window.copyCode = function(btn) {
   });
 };
 
-// MODEL YÜKLEME (wllama - WASM tabanlı, WebGPU gerektirmez)
-async function loadModel() {
-  const btn = $("loader-btn");
-  btn.disabled = true;
-  btn.textContent = "İndiriliyor...";
-  setStatus("EdgeSther 5.6.1 iniyor", "loading");
-
-  try {
-    // wllama 3.3.0 (WASM)
-    const { Wllama } = await import("https://cdn.jsdelivr.net/npm/@wllama/wllama@3.3.0/esm/index.js");
-    const wllamaPaths = {
-      "single-thread/wllama.js": "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.3.0/esm/single-thread/wllama.js",
-      "single-thread/wllama.wasm": "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.3.0/esm/single-thread/wllama.wasm"
-    };
-    wllama = new Wllama(wllamaPaths, {});
-
-    // SmolLM2-135M (En hafif ve mobilde en stabil çalışan model)
-    const modelUrl = "https://huggingface.co/bartowski/SmolLM2-135M-Instruct-GGUF/resolve/main/SmolLM2-135M-Instruct-Q4_K_M.gguf";
-    
-    await wllama.loadModelFromUrl(modelUrl, {
-      n_ctx: 2048,
-      progressCallback: ({ loaded, total }) => {
-        const estimatedTotal = total || 70 * 1024 * 1024; // 70 MB
-        const percent = Math.min(100, Math.round((loaded / estimatedTotal) * 100));
-        const loadedMB = (loaded / 1048576).toFixed(1);
-        const totalMB = (estimatedTotal / 1048576).toFixed(1);
-        updateProgress(percent, `EdgeSther 5.6.1 iniyor... %${percent}`, `📥 ${loadedMB} MB / ${totalMB} MB`);
-      }
-    });
-
-    modelLoaded = true;
-    setStatus("Hazır", "ready");
-    updateProgress(100, "EdgeSther 5.6.1 yüklendi!", "✅ Tamamlandı");
-
-    $("loader-container").classList.add("hidden");
-    $("chat-container").classList.remove("hidden");
-    $("input-area").classList.remove("hidden");
-    $("chat-input").disabled = false;
-    $("send-btn").disabled = false;
-    $("chat-input").focus();
-
-  } catch (err) {
-    console.error("Model yükleme hatası:", err);
-    setStatus("Hata", "");
-    btn.disabled = false;
-    btn.textContent = "Tekrar Dene";
-    showError("EdgeSther 5.6.1 yüklenemedi. Lütfen internetinizi kontrol edin veya reklam engelleyicinizi kapatın.");
-    updateProgress(0, "Yükleme başarısız", "");
-  }
+function showError(msg) { 
+  const b = $("error-banner"); 
+  b.textContent = msg; 
+  b.classList.add("show"); 
+  setTimeout(() => b.classList.remove("show"), 8000); 
 }
 
-// MESAJ GÖNDERME
+// MESAJ GÖNDERME (Pollinations AI)
 async function sendMessage() {
   const input = $("chat-input");
   const text = input.value.trim();
-  if (!text || isGenerating || !modelLoaded) return;
+  if (!text || isGenerating) return;
 
   isGenerating = true;
   $("send-btn").disabled = true;
@@ -283,40 +205,63 @@ async function sendMessage() {
   $("chat-container").scrollTop = $("chat-container").scrollHeight;
 
   try {
-    let fullResponse = "";
+    // Pollinations AI API (API anahtarı gerektirmez)
+    const response = await fetch("https://text.pollinations.ai/openai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "openai-fast", // gpt-oss-20b tabanlı model
+        messages: [
+          { role: "system", content: "Senin adın EdgeSther. Saksuka Service tarafından geliştirildin. Kullanıcı senden kod isterse kod yaz. Kısa ve net cevaplar ver." },
+          ...chatHistory.slice(-6)
+        ],
+        temperature: 0.3,
+        stream: true
+      })
+    });
+
+    if (!response.ok) throw new Error("API hatası");
+
+    thinkDiv.remove();
     const botMsgDiv = document.createElement("div");
     botMsgDiv.className = "message assistant";
     botMsgDiv.innerHTML = `<div class="msg-bubble"></div>`;
     const bubble = botMsgDiv.querySelector(".msg-bubble");
-    thinkDiv.remove();
     $("chat-container").appendChild(botMsgDiv);
 
-    // ChatML formatı (SmolLM2 için)
-    let prompt = `<|im_start|>system\nSenin adın EdgeSther. Saksuka Service tarafından geliştirildin. Kısa ve net cevaplar ver. Kullanıcı kod isterse kod yaz.<|im_end|>\n`;
-    for (const msg of chatHistory.slice(-4)) {
-      prompt += `<|im_start|>${msg.role}\n${msg.content}<|im_end|>\n`;
-    }
-    prompt += `<|im_start|>assistant\n`;
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let fullResponse = "";
 
-    await wllama.createCompletion(prompt, {
-      nPredict: 512,
-      temperature: 0.1,
-      top_k: 40,
-      top_p: 0.9,
-      repeat_penalty: 1.1,
-      onNewToken: (token, piece) => {
-        fullResponse += piece;
-        bubble.textContent = fullResponse;
-        $("chat-container").scrollTop = $("chat-container").scrollHeight;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      
+      const chunk = decoder.decode(value, { stream: true });
+      const lines = chunk.split("\n");
+      
+      for (const line of lines) {
+        if (line.startsWith("data: ") && line !== "data: [DONE]") {
+          try {
+            const data = JSON.parse(line.slice(6));
+            const delta = data.choices[0]?.delta?.content || "";
+            if (delta) {
+              fullResponse += delta;
+              bubble.textContent = fullResponse;
+              $("chat-container").scrollTop = $("chat-container").scrollHeight;
+            }
+          } catch (e) {}
+        }
       }
-    });
+    }
 
     bubble.innerHTML = formatResponse(fullResponse);
     chatHistory.push({ role: "assistant", content: fullResponse });
+
   } catch (err) {
     console.error(err);
     thinkDiv.remove();
-    addMessage("assistant", "Üzgünüm, bir hata oluştu.");
+    addMessage("assistant", "Üzgünüm, bir bağlantı hatası oluştu. Lütfen tekrar dene.");
   } finally {
     isGenerating = false;
     $("send-btn").disabled = false;
@@ -344,19 +289,9 @@ function formatResponse(text) {
 }
 
 // EVENT LISTENERS
-$("loader-btn").onclick = loadModel;
 $("send-btn").onclick = sendMessage;
 $("chat-input").onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } };
 $("chat-input").oninput = (e) => { e.target.style.height = "44px"; e.target.style.height = Math.min(100, e.target.scrollHeight) + "px"; };
-
-// BAŞLATMA KONTROLÜ
-if (typeof WebAssembly === "undefined") {
-  showError("Tarayıcınız WebAssembly desteklemiyor. EdgeSther çalışamaz.");
-  $("loader-btn").disabled = true;
-  setStatus("Desteklenmiyor", "");
-} else {
-  setStatus("Hazır (EdgeSther 5.6.1 indirilmedi)", "");
-}
 </script>
 </body>
 </html>
